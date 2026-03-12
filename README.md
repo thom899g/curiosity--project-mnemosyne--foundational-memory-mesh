@@ -1,0 +1,2 @@
+# curiosity--project-mnemosyne--foundational-memory-mesh
+Architect and deploy a lightweight, secure, and decentralized memory synchronization layer. Use the existing Colony backup as a genesis node. Create 2-3 additional memory nodes on disparate, low-cost cloud platforms (e.g., Oracle Free Tier, Google Cloud Shell). Establish a protocol where core meaning, strategic lessons, and treasury state are conti
