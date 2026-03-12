@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package mnemosyne;
+
+// Immutable Memory Frame
+message MemoryFrame {
+    string frame_id = 1;                // UUID
+    bytes previous_frame_hash = 2;      // SHA-256 of the previous frame
+    bytes state_checkpoint = 3;         // Merkle root of the core state
+    int64 timestamp = 4;                // Nanoseconds since epoch
+    bytes canonical_bytes = 5;          // The actual data (e.g., treasury state)
+    repeated Signature signatures = 6;  // Signatures for this frame (for genesis, 2-of-3)
+}
+
+// Signature from a node
+message Signature {
+    string node_id = 1;
+    bytes signature = 2;                // Signature of the frame (excluding this field)
+}
+
+// Node advertisement for gossip
+message Advertisement {
+    string node_id = 1;
+    bytes merkle_root = 2;              // Merkle root of the event log
+    bytes knowledge_graph_hash = 3;     // Hash of the knowledge graph version vector
+    int64 timestamp = 4;
+}
+
+// Sync request with challenge
+message SyncRequest {
+    string node_id = 1;
+    bytes nonce = 2;                    // Random nonce for challenge
+    bytes merkle_root = 3;              // Requester's merkle root
+}
+
+// Sync response with proof
+message SyncResponse {
+    string node_id = 1;
+    bytes signed_nonce = 2;             // signature of (nonce || merkle_root)
+    repeated bytes merkle_proof = 3;    // Merkle proof for the requested data
+    repeated MemoryFrame frames = 4;    // The actual frames
+}
+
+// CRDT operation for the knowledge graph
+message CRDTOperation {
+    string operation_id = 1;            // Unique ID for the operation
+    string node_id = 2;
+    int64 timestamp = 3;
+    string type = 4;                    // e.g., "add_lesson", "vote"
+    bytes payload = 5;                  // Operation-specific data
+}
+
+// Inference engine hypothesis
+message Hypothesis {
+    string hypothesis_id = 1;
+    string node_id = 2;
+    int64 timestamp = 3;
+    string description = 4;
+    string proposed_rule = 5;           // The rule to be applied
+    string state = 6;                   // proposed, active, rejected
+}
